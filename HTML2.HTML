@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RailSafe - IoT Railway Safety & Monitoring System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #059669;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo::before {
+            content: "🚄";
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #374151;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #059669;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            padding: 150px 2rem 100px;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-100px) rotate(360deg); }
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #059669;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: #059669;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 4rem 2rem;
+            background: #f8fafc;
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #059669;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #1f2937;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            padding: 2.5rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: #dcfce7;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+
+        .feature-card p {
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        /* Architecture Section */
+        .architecture {
+            background: #1f2937;
+            color: white;
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .architecture-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .architecture h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .architecture-diagram {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .arch-layer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .arch-component {
+            background: rgba(5, 150, 105, 0.2);
+            border: 2px solid #059669;
+            border-radius: 10px;
+            padding: 1rem;
+            flex: 1;
+            min-width: 150px;
+            font-size: 0.9rem;
+        }
+
+        .arch-arrow {
+            font-size: 1.5rem;
+            color: #059669;
+        }
+
+        /* Dashboard Preview */
+        .dashboard-preview {
+            padding: 6rem 2rem;
+            background: #f8fafc;
+        }
+
+        .preview-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .preview-container h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #1f2937;
+        }
+
+        .dashboard-mockup {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin: 2rem 0;
+        }
+
+        .mockup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .status-indicators {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-green { background: #059669; }
+        .status-yellow { background: #f59e0b; }
+        .status-red { background: #dc2626; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .mockup-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1rem;
+            height: 300px;
+        }
+
+        .map-area {
+            background: linear-gradient(45deg, #e5e7eb, #f3f4f6);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .train-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            position: absolute;
+            animation: move 10s infinite linear;
+        }
+
+        .train-dot:nth-child(1) { background: #059669; top: 30%; left: 20%; }
+        .train-dot:nth-child(2) { background: #f59e0b; top: 60%; left: 40%; animation-delay: -3s; }
+        .train-dot:nth-child(3) { background: #dc2626; top: 80%; left: 70%; animation-delay: -6s; }
+
+        @keyframes move {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(200px); }
+        }
+
+        .alerts-panel {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 1rem;
+        }
+
+        .alert-item {
+            background: white;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border-radius: 8px;
+            border-left: 4px solid #dc2626;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        /* Tech Stack */
+        .tech-stack {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .tech-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .tech-category {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .tech-category h3 {
+            color: #059669;
+            margin-bottom: 1rem;
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .tech-tag {
+            background: #dcfce7;
+            color: #065f46;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Contact Section */
+        .contact {
+            background: #059669;
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .contact-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact-form {
+            display: grid;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .form-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .form-input {
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: white;
+            color: #059669;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        /* Footer */
+        .footer {
+            background: #1f2937;
+            color: white;
+            padding: 3rem 2rem 1rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: #059669;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 2rem 0 0;
+            margin-top: 2rem;
+            border-top: 1px solid #374151;
+            color: #9ca3af;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .mockup-content {
+                grid-template-columns: 1fr;
+            }
+
+            .arch-layer {
+                flex-direction: column;
+            }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">RailSafe</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#architecture">Architecture</a></li>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#tech">Technology</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>RailSafe</h1>
+            <p>IoT-Enabled Railway Safety & Monitoring System</p>
+            <p>Real-time hazard detection, instant alerts, and coordinated emergency response for modern railways</p>
+            <div class="cta-buttons">
+                <a href="#dashboard" class="btn btn-primary">View Demo Dashboard</a>
+                <a href="#features" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stat-item fade-in">
+                <div class="stat-number">99.9%</div>
+                <div class="stat-label">Uptime SLA</div>
+            </div>
+            <div class="stat-item fade-in">
+                <div class="stat-number">&lt;5s</div>
+                <div class="stat-label">Alert Delivery</div>
+            </div>
+            <div class="stat-item fade-in">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Monitoring</div>
+            </div>
+            <div class="stat-item fade-in">
+                <div class="stat-number">Multi</div>
+                <div class="stat-label">Sensor Types</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <h2 class="fade-in">Core Features</h2>
+        <div class="features-grid">
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🔥</div>
+                <h3>Fire & Smoke Detection</h3>
+                <p>Advanced sensors detect fire and smoke hazards instantly, triggering immediate alerts to prevent catastrophic incidents.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">💨</div>
+                <h3>Gas Leak Monitoring</h3>
+                <p>Real-time gas concentration monitoring with configurable thresholds and automated escalation protocols.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">📊</div>
+                <h3>Vibration Analysis</h3>
+                <p>Continuous vibration monitoring to detect derailment risks, track defects, and mechanical failures.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🗺️</div>
+                <h3>Real-time Fleet Tracking</h3>
+                <p>GPS-enabled location tracking with geofencing, route monitoring, and proximity-based alerts.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">📱</div>
+                <h3>Driver PWA</h3>
+                <p>Offline-first Progressive Web App for drivers with instant alert delivery and confirmation workflows.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🎛️</div>
+                <h3>Control Room Dashboard</h3>
+                <p>Comprehensive monitoring interface with real-time maps, alert queues, and incident management.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture Section -->
+    <section id="architecture" class="architecture">
+        <div class="architecture-container">
+            <h2 class="fade-in">System Architecture</h2>
+            <p class="fade-in">Scalable, resilient, and secure IoT infrastructure designed for mission-critical railway operations</p>
+            
+            <div class="architecture-diagram fade-in">
+                <div class="arch-layer">
+                    <div class="arch-component">Edge Sensors<br><small>Fire, Smoke, Gas, Vibration, GPS</small></div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-component">MCU Gateway<br><small>ESP32/STM32 + Local Rules</small></div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-component">Connectivity<br><small>GSM/LTE, Wi-Fi, LoRa</small></div>
+                </div>
+                
+                <div class="arch-layer">
+                    <div class="arch-component">API Gateway<br><small>mTLS + WAF</small></div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-component">Ingest Service<br><small>HTTP/MQTT</small></div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-component">Stream Bus<br><small>Kafka/NATS</small></div>
+                </div>
+                
+                <div class="arch-layer">
+                    <div class="arch-component">Rules Engine<br><small>CEP + ML</small></div>
+                    <div class="arch-component">Time-Series DB<br><small>Timescale/Influx</small></div>
+                    <div class="arch-component">Alert Service<br><small>State Management</small></div>
+                </div>
+                
+                <div class="arch-layer">
+                    <div class="arch-component">Web Dashboard<br><small>React + PWA</small></div>
+                    <div class="arch-component">Mobile Apps<br><small>Driver Interface</small></div>
+                    <div class="arch-component">Notifications<br><small>SMS, Push, IVR</small></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Preview -->
+    <section id="dashboard" class="dashboard-preview">
+        <div class="preview-container">
+            <h2 class="fade-in">Control Room Dashboard</h2>
+            <p class="fade-in">Real-time monitoring and incident management interface</p>
+            
+            <div class="dashboard-mockup fade-in">
+                <div class="mockup-header">
+                    <div>
+                        <strong>RailSafe Control Center</strong>
+                        <span style="margin-left: 1rem; color: #6b7280;">Live Fleet Status</span>
+                    </div>
+                    <div class="status-indicators">
+                        <div class="status-dot status-green" title="Online Trains"></div>
+                        <div class="status-dot status-yellow" title="Warnings"></div>
+                        <div class="status-dot status-red" title="Critical Alerts"></div>
+                    </div>
+                </div>
+                
+                <div class="mockup-content">
+                    <div class="map-area">
+                        <div style="color: #6b7280; font-size: 1.1rem;">Live Train Positions</div>
+                        <div class="train-dot"></div>
+                        <div class="train-dot"></div>
+                        <div class="train-dot"></div>
+                    </div>
+                    
+                    <div class="alerts-panel">
+                        <h4 style="margin-bottom: 1rem; color: #1f2937;">Active Alerts</h4>
+                        <div class="alert-item">
+                            <strong>#1452</strong> Gas Leak Detected<br>
+                            <small>Train 09 - Coach 4 - 2 min ago</small>
+                        </div>
+                        <div class="alert-item" style="border-left-color: #f59e0b;">
+                            <strong>#1453</strong> Smoke Alert<br>
+                            <small>Train 12 - Coach 2 - 5 min ago</small>
+                        </div>
+                        <div class="alert-item" style="border-left-color: #059669;">
+                            <strong>#1454</strong> System Normal<br>
+                            <small>Train 15 - All coaches - Now</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Stack -->
+    <section id="tech" class="tech-stack">
+        <h2 class="fade-in">Technology Stack</h2>
+        <p class="fade-in">Built with modern, proven technologies for reliability and scalability</p>
+        
+        <div class="tech-categories">
+            <div class="tech-category fade-in">
+                <h3>Edge Computing</h3>
+                <div class="tech-tags">
+                    <span class="tech-tag">ESP32</span>
+                    <span class="tech-tag">STM32</span>
+                    <span class="tech-tag">FreeRTOS</span>
+                    <span class="tech-tag">MQTT</span>
+                </div>
+            </div>
+            
+            <div class="tech-category fade-in">
+                <h3>Backend Services</h3>
+                <div class="tech-tags">
+                    <span class="tech-tag">Node.js</span>
+                    <span class="tech-tag">NestJS</span>
+                    <span class="tech-tag">Kafka</span>
+                    <span class="tech-tag">PostgreSQL</span>
+                </div>
+            </div>
+            
+            <div class="tech-category fade-in">
+                <h3>Data Storage</h3>
+                <div class="tech-tags">
+                    <span class="tech-tag">TimescaleDB</span>
+                    <span class="tech-tag">Redis</span>
+                    <span class="tech-tag">MinIO</span>
+                    <span class="tech-tag">InfluxDB</span>
+                </div>
+            </div>
+            
+            <div class="tech-category fade-in">
+                <h3>Frontend</h3>
+                <div class="tech-tags">
+                    <span class="tech-tag">React</span>
+                    <span class="tech-tag">Tailwind CSS</span>
+                    <span class="tech-tag">PWA</span>
+                    <span class="tech-tag">Workbox</span>
+                </div>
+            </div>
+            
+            <div class="tech-category fade-in">
+                <h3>Infrastructure</h3>
+                <div class="tech-tags">
+                    <span class="tech-tag">Kubernetes</span>
+                    <span class="tech-tag">Docker</span>
+                    <span class="tech-tag">Terraform</span>
+                    <span class="tech-tag">Prometheus</span>
+                </div>
+            </div>
+            
+            <div class="tech-category fade-in">
+                <h3>Security</h3>
+                <div class="tech-tags">
+                    <span class="tech-tag">mTLS</span>
+                    <span class="tech-tag">X.509</span>
+                    <span class="tech-tag">Keycloak</span>
+                    <span class="tech-tag">RBAC</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="contact-container">
+            <h2 class="fade-in">Get in Touch</h2>
+            <p class="fade-in">Ready to implement RailSafe in your railway network? Contact our team for a consultation.</p>
+            
+            <form class="contact-form fade-in">
+                <div class="form-group">
+                    <input type="text" class="form-input" placeholder="Your Name" required>
+                    <input type="email" class="form-input" placeholder="Email Address" required>
+                </div>
+                <input type="text" class="form-input" placeholder="Organization" required>
+                <textarea class="form-input form-textarea" placeholder="Tell us about your railway safety requirements..." required></textarea>
+                <button type="submit" class="submit-btn">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>Company</h3>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 RailSafe Systems. All rights reserved. | Ensuring railway safety through innovative IoT technology.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Fade in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Navbar background on scroll
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                navbar.style.boxShadow = '0 2px 20px rgba(0,0,0,0.1)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                navbar.style.boxShadow = 'none';
+            }
+        });
+
+        // Contact form handling
+        document.querySelector('.contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show success message
+            const button = this.querySelector('.submit-btn');
+            const originalText = button.textContent;
+            button.textContent = 'Message Sent!';
+            button.style.background = '#059669';
+            button.style.color = 'white';
+            
+            // Reset form
+            setTimeout(() => {
+                this.reset();
+                button.textContent = originalText;
+                button.style.background = 'white';
+                button.style.color = '#059669';
+            }, 2000);
+        });
+
+        // Add some interactive elements to the dashboard mockup
+        document.addEventListener('DOMContentLoaded', function() {
+            const alertItems = document.querySelectorAll('.alert-item');
+            alertItems.forEach((item, index) => {
+                item.addEventListener('click', function() {
+                    // Simulate acknowledging an alert
+                    if (!this.classList.contains('acknowledged')) {
+                        this.style.opacity = '0.6';
+                        this.style.borderLeftColor = '#059669';
+                        this.classList.add('acknowledged');
+                        
+                        // Add "Acknowledged" text
+                        const ackText = document.createElement('small');
+                        ackText.textContent = ' - Acknowledged';
+                        ackText.style.color = '#059669';
+                        ackText.style.fontWeight = 'bold';
+                        this.appendChild(ackText);
+                    }
+                });
+            });
+
+            // Add click handlers for train dots
+            const trainDots = document.querySelectorAll('.train-dot');
+            trainDots.forEach((dot, index) => {
+                dot.addEventListener('click', function() {
+                    // Simulate showing train details
+                    const tooltip = document.createElement('div');
+                    tooltip.innerHTML = `
+                        <strong>Train ${['09', '12', '15'][index]}</strong><br>
+                        Speed: ${Math.floor(Math.random() * 40 + 60)} km/h<br>
+                        Status: ${['Critical', 'Warning', 'Normal'][index]}
+                    `;
+                    tooltip.style.cssText = `
+                        position: absolute;
+                        background: white;
+                        padding: 10px;
+                        border-radius: 8px;
+                        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+                        font-size: 12px;
+                        color: #1f2937;
+                        pointer-events: none;
+                        z-index: 1000;
+                        top: ${this.offsetTop - 60}px;
+                        left: ${this.offsetLeft + 20}px;
+                    `;
+                    
+                    this.parentNode.appendChild(tooltip);
+                    
+                    setTimeout(() => {
+                        tooltip.remove();
+                    }, 3000);
+                });
+                
+                // Add hover effect
+                dot.style.cursor = 'pointer';
+                dot.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.5)';
+                    this.style.transition = 'transform 0.2s ease';
+                });
+                
+                dot.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+        });
+
+        // Add some real-time simulation to stats
+        function animateStats() {
+            const statNumbers = document.querySelectorAll('.stat-number');
+            
+            // Animate uptime
+            let uptime = 99.9;
+            setInterval(() => {
+                uptime = Math.max(99.7, Math.min(99.9, uptime + (Math.random() - 0.5) * 0.1));
+                if (statNumbers[0]) {
+                    statNumbers[0].textContent = uptime.toFixed(1) + '%';
+                }
+            }, 5000);
+            
+            // Animate alert delivery time
+            let alertTime = 5;
+            setInterval(() => {
+                alertTime = Math.max(3, Math.min(8, alertTime + (Math.random() - 0.5) * 2));
+                if (statNumbers[1]) {
+                    statNumbers[1].textContent = '<' + Math.floor(alertTime) + 's';
+                }
+            }, 3000);
+        }
+
+        // Start animations when page loads
+        setTimeout(animateStats, 2000);
+
+        // Add typing effect to hero text
+        function typeWriter(element, text, speed = 50) {
+            let i = 0;
+            element.textContent = '';
+            
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            
+            type();
+        }
+
+        // Initialize typing effect
+        window.addEventListener('load', () => {
+            const heroTitle = document.querySelector('.hero h1');
+            const originalText = heroTitle.textContent;
+            setTimeout(() => {
+                typeWriter(heroTitle, originalText, 100);
+            }, 500);
+        });
+    </script>
+</body>
+</html>section">
+                <h3>RailSafe</h3>
+                <p>IoT-Enabled Railway Safety & Monitoring System for the modern railway industry.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Product</h3>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#architecture">Architecture</a></li>
+                    <li><a href="#dashboard">Dashboard</a></li>
+                    <li><a href="#tech">Technology</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">API Reference</a></li>
+                    <li><a href="#">Safety Guidelines</a></li>
+                    <li><a href="#">Case Studies</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-
